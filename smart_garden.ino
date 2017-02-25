@@ -4,48 +4,83 @@
 #include <dht.h>
 #define DHT11_PIN 7
 dht DHT;
-boolean win=false;//tells if window is open or closed, used to send info to phone so that it can be sent all at the same time and we have a reference
-int tempo; //make arduino clock
-boolean wat;//water irrigation on or off
+
+//temperature//
 int ptemp;//temperature needed
-int led = 13;
-int pos = 0;//servo position
-int buttonop = 4;//button port
-boolean butopval = false;//button open HIGH/LOW
-boolean butclval = true; //button closed HIGH/LOW
-int buttoncl = 7;//button port
+//temperature
 
+//servo
+boolean servo = false;
 Servo myservo;
+int pos = 0;//servo position
+//servo 
 
+//watering
+int solenoidPin = 4; 
+int rainPin = A0;
+int thresholdValue = 50;
+//watering
+
+//led
+int ledW = 6;
+int templed1 = 11; //appropriate temperature
+int templed2 = 12; //temperature's to low
+//led 
+
+//potentiometer
 int potPin = 2;    // select the input pin for the potentiometer
-int val = 0;       // variable to store the value coming from the sensor
+int val = 0;       // variable to store the value coming from the potentiometer
+//potentiometer
 
 void setup() {
   // put your setup code here, to run once:
-myservo.attach(9);//servo is on port 9
-pinMode (led, OUTPUT);
+myservo.attach(9);//servo is on port 9/ check what port it is connected to
+
 Serial.begin(9600);
-pinMode(buttonop,INPUT);
-pinMode(buttoncl, INPUT);
+pinMode(rainPin, INPUT);
+pinMode(solenoidPin, OUTPUT); 
+
 }
 
 void loop() {
 
- butval= digitalRead(buttonop);
-if(butopval==true){
-  digitalWrite(led, HIGH);//Check conflit with temperature setting
  
+int sensorValue = analogRead(rainPin);
+
+sensorValue = map(sensorValue, 300,1023,100,0);//measure 0 value
+Serial.print("Soil Humidity needed= ");
+Serial.println(thresholdValue);
+Serial.print("Soil Humidity= ");
+Serial.println(sensorValue);
+
+if(sensorValue < thresholdValue){
+
+ 
+  digitalWrite(ledW,HIGH);
+  Serial.println("Need irrigation"); //Blue LED
+  digitalWrite(solenoidPin, LOW);
+  
+//
 }
 
-val = analogRead(potPin);    // read the value from the sensor
+else if(sensorValue > thresholdValue || sensorValue == thresholdValue){
+
+  
+  digitalWrite(ledW,LOW);
+  Serial.println("Doesn't need irrigation");
+ digitalWrite(solenoidPin, HIGH);
+}
+
+val = analogRead(potPin);    // read the value from the potent
 val=map(val, 0,1023,50,0);
-ptemp=val;
+ptemp=16;
   Serial.print("Temperature needed= ");
   Serial.println(ptemp);
 
 
   //ggg
   int chk = DHT.read11(DHT11_PIN);
+  
   Serial.print("Temperature = ");
   Serial.println(DHT.temperature);
   Serial.print("Humidity = ");
@@ -55,28 +90,44 @@ ptemp=val;
 
  
  
- delay(1000); 
 
-   if (DHT.temperature>(ptemp) && buttonop==false){
 
-digitalWrite (led, HIGH);
-delay(500);
-digitalWrite(led, LOW);
+   if ((DHT.temperature) > (ptemp)){ //check () in DHT.temperature 
+ digitalWrite(templed1, HIGH);
+ //check with serial print
+Serial.print("temperature higher than needed");
 
-  //make servo move -1
-   }
-   else if (DHT.temperature<(ptemp) || DHT.temperature ==(ptemp) && buttoncl == false){
+for (pos = 0; pos <= 25; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+  }
+
+  }
+
+ 
+
+  
+   
+   else if ((DHT.temperature)<(ptemp) || (DHT.temperature) == (ptemp) ){
     
-digitalWrite (led, HIGH);
-delay(500);
-digitalWrite(led, LOW);
 
+digitalWrite(templed2, HIGH);
 
-  //make servo move +1
+for(pos = 25; pos >= 0; pos -= 1){
+  myservo.write(pos);
+  delay(15);
+}
+
+  //make servo open
+
+  //create opening loop, with boolean, so that code doesn't repeat
    
    }
 
 }
+
+
 
 
 

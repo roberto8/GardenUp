@@ -85,7 +85,7 @@ ptemp=16;
   Serial.println(DHT.temperature);
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
-  delay(1000);
+  delay(1000);//check delay to make serial prints at lower rates
   //ggg
 
  

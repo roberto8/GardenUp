@@ -1,8 +1,8 @@
-#include <time.h>
+#include <time.h> //make parameter to controll water irrigation making it irrigate for less then (x) value
 #include <Servo.h>
-#define delayTime 20
-#include <dht.h>
-#define DHT11_PIN 7
+#define delayTime 20 //var not in use
+#include <dht.h>  //moisture and temperature sensor (dht.11)
+#define DHT11_PIN 7 //temperature and moisture sensor atached to port 7 (digital)
 dht DHT;
 
 //temperature//
@@ -12,19 +12,21 @@ int ptemp;//temperature needed
 //servo
 boolean servo = false;
 Servo myservo;
-int pos = 0;//servo position
+int pos = 0;//servo starts in position 0 (closed)
 //servo 
 
 //watering
-int solenoidPin = 4; 
-int rainPin = A0;
-int thresholdValue = 50;
+int solenoidPin = 4; //solenoid pin atached to port 4 (not using solenoid) no relay
+int rainPin = A0; //soil moisture sensor 1
+int rainPin2 = A1; //soil moisture sensor 2
+int thresholdValue = 50; //moisture needed (%)
 //watering
 
 //led
-int ledW = 6;
-int templed1 = 11; //appropriate temperature
-int templed2 = 12; //temperature's to low
+int tempH = 10; //temperature's high
+int tempL = 11; //temperature's  low
+int SoilMoistureH = 12; //SoilMoisture's high
+int SoilMoistureL = 13 //SoilMoisture's Low
 //led 
 
 //potentiometer
@@ -33,21 +35,24 @@ int val = 0;       // variable to store the value coming from the potentiometer
 //potentiometer
 
 void setup() {
-  // put your setup code here, to run once:
-myservo.attach(9);//servo is on port 9/ check what port it is connected to
+
+myservo.attach(9); //SERVO ataches to port 9
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
 pinMode(solenoidPin, OUTPUT); 
-
+pinMode(tempH, OUTPUT);
+pinMode(tempL, OUTPUT);
+pinMode(SoilMoistureH, OUTPUT);
+pinMode(SoilMoistureL, OUTPUT);
 }
 
 void loop() {
 
  
-int sensorValue = analogRead(rainPin);
+int sensorValue = (( (analogRead(rainPin)) + analogRead(rainPin2))/2); //using to moisture sensors to do the average
 
-sensorValue = map(sensorValue, 300,1023,100,0);//measure 0 value
+sensorValue = map(sensorValue, 300,1023,100,0); //maping moisture value from 0-100 (percentage)
 Serial.print("Soil Humidity needed= ");
 Serial.println(thresholdValue);
 Serial.print("Soil Humidity= ");
@@ -56,29 +61,30 @@ Serial.println(sensorValue);
 if(sensorValue < thresholdValue){
 
  
-  digitalWrite(ledW,HIGH);
-  Serial.println("Need irrigation"); //Blue LED
+  digitalWrite(SoilMoistureL,HIGH);
+  digitalWrite(SoilMoistureH,LOW);
+  Serial.println("Need irrigation");
   digitalWrite(solenoidPin, LOW);
   
 //
 }
 
-else if(sensorValue > thresholdValue || sensorValue == thresholdValue){
+else if(sensorValue > thresholdValue || sensorValue == thresholdValue){ //if soil moisture is HIGHER or EQUAL to set value
 
   
-  digitalWrite(ledW,LOW);
+  digitalWrite(SoilMoistureL,LOW);
+  digitalWrite(SoilMoistureH,HIGH);
   Serial.println("Doesn't need irrigation");
  digitalWrite(solenoidPin, HIGH);
 }
 
-val = analogRead(potPin);    // read the value from the potent
-val=map(val, 0,1023,50,0);
-ptemp=16;
+val = analogRead(potPin);    // read the value from the potentiometer
+val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
+ptemp=val; //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
   Serial.print("Temperature needed= ");
   Serial.println(ptemp);
 
 
-  //ggg
   int chk = DHT.read11(DHT11_PIN);
   
   Serial.print("Temperature = ");
@@ -86,20 +92,21 @@ ptemp=16;
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
   delay(1000);//check delay to make serial prints at lower rates
-  //ggg
+ 
 
  
  
 
 
-   if ((DHT.temperature) > (ptemp)){ //check () in DHT.temperature 
- digitalWrite(templed1, HIGH);
- //check with serial print
+   if (((DHT.temperature) > (ptemp)) && (pos==0)){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
+ 
 Serial.print("temperature higher than needed");
-
-for (pos = 0; pos <= 25; pos += 1) { // goes from 0 degrees to 180 degrees
+digitalWrite(tempH, HIGH);
+digitalWrite(tempL, LOW);
+for (pos = 0; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    Serial.print(pos);
     delay(15);                       // waits 15ms for the servo to reach the position
   }
 
@@ -109,19 +116,19 @@ for (pos = 0; pos <= 25; pos += 1) { // goes from 0 degrees to 180 degrees
 
   
    
-   else if ((DHT.temperature)<(ptemp) || (DHT.temperature) == (ptemp) ){
+   else if (((DHT.temperature)<(ptemp) || (DHT.temperature) == (ptemp) )&& (pos == 90)){ //if temperature is LOWER OR EQUAL to set (defined by var "val") and door is open
     
 
-digitalWrite(templed2, HIGH);
+digitalWrite(tempH, LOW);
+digitalWrite(tempL, HIGH);
 
-for(pos = 25; pos >= 0; pos -= 1){
+for(pos = 90; pos >= 0; pos -= 1){
   myservo.write(pos);
+  Serial.print(pos);
   delay(15);
 }
 
-  //make servo open
-
-  //create opening loop, with boolean, so that code doesn't repeat
+  
    
    }
 

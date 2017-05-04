@@ -26,7 +26,7 @@ int thresholdValue = 50; //moisture needed (%)
 int tempH = 10; //temperature's high
 int tempL = 11; //temperature's  low
 int SoilMoistureH = 12; //SoilMoisture's high
-int SoilMoistureL = 13 //SoilMoisture's Low
+int SoilMoistureL = 13; //SoilMoisture's Low
 //led 
 
 //potentiometer
@@ -45,6 +45,7 @@ pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
 pinMode(SoilMoistureH, OUTPUT);
 pinMode(SoilMoistureL, OUTPUT);
+ptemp=20;
 }
 
 void loop() {
@@ -66,23 +67,24 @@ if(sensorValue < thresholdValue){
   Serial.println("Need irrigation");
   digitalWrite(solenoidPin, LOW);
   
-//
+// if irrigation needed indicating LED will light up and print, solenoid open (LOW signal, normaly open)
 }
 
-else if(sensorValue > thresholdValue || sensorValue == thresholdValue){ //if soil moisture is HIGHER or EQUAL to set value
+else if (sensorValue > thresholdValue || sensorValue == thresholdValue) {
 
   
   digitalWrite(SoilMoistureL,LOW);
   digitalWrite(SoilMoistureH,HIGH);
   Serial.println("Doesn't need irrigation");
  digitalWrite(solenoidPin, HIGH);
+// if no irrigation needed indicating LED will light up and print, solenoid close (HIGH signal, normaly open)
 }
 
 val = analogRead(potPin);    // read the value from the potentiometer
 val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
-ptemp=val; //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
+ //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
   Serial.print("Temperature needed= ");
-  Serial.println(ptemp);
+  //Serial.println(ptemp);
 
 
   int chk = DHT.read11(DHT11_PIN);
@@ -98,15 +100,15 @@ ptemp=val; //temperature is set by the potentiometer in 0-50ºC scale ("val" var
  
 
 
-   if (((DHT.temperature) > (ptemp)) && (pos==0)){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
+   if (((DHT.temperature) > (ptemp)) && (pos!=90)){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
  
 Serial.print("temperature higher than needed");
 digitalWrite(tempH, HIGH);
 digitalWrite(tempL, LOW);
-for (pos = 0; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
+for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    Serial.print(pos);
+    //Serial.print(pos);
     delay(15);                       // waits 15ms for the servo to reach the position
   }
 
@@ -116,8 +118,9 @@ for (pos = 0; pos <= 90; pos += 1) { // goes from 0 degrees to 180 degrees
 
   
    
-   else if (((DHT.temperature)<(ptemp) || (DHT.temperature) == (ptemp) )&& (pos == 90)){ //if temperature is LOWER OR EQUAL to set (defined by var "val") and door is open
-    
+   else if ((DHT.temperature)<=ptemp && (pos == 90))
+   { 
+   
 
 digitalWrite(tempH, LOW);
 digitalWrite(tempL, HIGH);
@@ -131,6 +134,7 @@ for(pos = 90; pos >= 0; pos -= 1){
   
    
    }
+   
 
 }
 

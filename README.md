@@ -15,7 +15,7 @@ Garden up! is a Maker based open-source project that means to make bioagricultur
 
 
 
-### Material
+# Material
 
 * [Solenoid Valve](http://www.botnroll.com/pt/biometricos/572-electrovalvula-12v-3-4.html?search_query=Solenoid+Valve&results=3) - controlls the water flow
 * [Moister Sensor](http://www.botnroll.com/pt/temperatura/788-sensor-de-humidade-no-solo.html?search_query=moisture+sensor&results=10) - Yl-69 sensor
@@ -25,7 +25,7 @@ Garden up! is a Maker based open-source project that means to make bioagricultur
 * [Servo Motors](http://www.botnroll.com/pt/servos/789-servo-towerpro-sg5010.html?search_query=servo&results=102) - opens and closes the openings to control the temperature
 
 
-### Development
+# Development
 
 Want to contribute? Great!
 

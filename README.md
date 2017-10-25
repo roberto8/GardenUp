@@ -77,4 +77,4 @@ YOU ARE DONE!
    [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>
 
 
-[![N|Solid](https://lh6.googleusercontent.com/pm1fBPmX6WYpLp1rSMP4VqIUpTY-wd5Lb4r4pK8hfo1AnmaEDUB3kI8QNX2I9k9kgB5Gk7y4z_m6YDI=w2880-h1354)](https://twitter.com/roberto_figuz)
+[![Gardenup](https://lh6.googleusercontent.com/pm1fBPmX6WYpLp1rSMP4VqIUpTY-wd5Lb4r4pK8hfo1AnmaEDUB3kI8QNX2I9k9kgB5Gk7y4z_m6YDI=w2880-h1354)](https://twitter.com/roberto_figuz)

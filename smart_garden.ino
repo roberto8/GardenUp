@@ -13,12 +13,14 @@ int ptemp;//temperature needed
 boolean servo = false;
 Servo myservo;
 int pos = 0;//servo starts in position 0 (closed)
-//servo 
+//servo
 
 //watering
 int solenoidPin = 4; //solenoid pin atached to port 4 (not using solenoid) no relay
+//sensor humidade porta A0//
 int rainPin = A0; //soil moisture sensor 1
-int rainPin2 = A1; //soil moisture sensor 2
+//sensor humidade porta A0//
+//int rainPin2 = A1; //soil moisture sensor 2 not in use
 int thresholdValue = 50; //moisture needed (%)
 //watering
 
@@ -27,7 +29,7 @@ int tempH = 10; //temperature's high
 int tempL = 11; //temperature's  low
 int SoilMoistureH = 12; //SoilMoisture's high
 int SoilMoistureL = 13; //SoilMoisture's Low
-//led 
+//led
 
 //potentiometer
 int potPin = 2;    // select the input pin for the potentiometer
@@ -40,7 +42,7 @@ myservo.attach(9); //SERVO ataches to port 9
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
-pinMode(solenoidPin, OUTPUT); 
+pinMode(solenoidPin, OUTPUT);
 pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
 pinMode(SoilMoistureH, OUTPUT);
@@ -50,8 +52,8 @@ ptemp=20;
 
 void loop() {
 
- 
-int sensorValue = (( (analogRead(rainPin)) + analogRead(rainPin2))/2); //using to moisture sensors to do the average
+
+int sensorValue =  (analogRead(rainPin)); //using to moisture sensors to do the average
 
 sensorValue = map(sensorValue, 300,1023,100,0); //maping moisture value from 0-100 (percentage)
 Serial.print("Soil Humidity needed= ");
@@ -61,18 +63,18 @@ Serial.println(sensorValue);
 
 if(sensorValue < thresholdValue){
 
- 
+
   digitalWrite(SoilMoistureL,HIGH);
   digitalWrite(SoilMoistureH,LOW);
   Serial.println("Need irrigation");
   digitalWrite(solenoidPin, LOW);
-  
+
 // if irrigation needed indicating LED will light up and print, solenoid open (LOW signal, normaly open)
 }
 
 else if (sensorValue > thresholdValue || sensorValue == thresholdValue) {
 
-  
+
   digitalWrite(SoilMoistureL,LOW);
   digitalWrite(SoilMoistureH,HIGH);
   Serial.println("Doesn't need irrigation");
@@ -88,20 +90,20 @@ val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
 
 
   int chk = DHT.read11(DHT11_PIN);
-  
+
   Serial.print("Temperature = ");
   Serial.println(DHT.temperature);
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
   delay(1000);//check delay to make serial prints at lower rates
- 
 
- 
- 
+
+
+
 
 
    if (((DHT.temperature) > (ptemp)) && (pos!=90)){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
- 
+
 Serial.print("temperature higher than needed");
 digitalWrite(tempH, HIGH);
 digitalWrite(tempL, LOW);
@@ -114,13 +116,13 @@ for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
 
   }
 
- 
 
-  
-   
+
+
+
    else if ((DHT.temperature)<=ptemp && (pos == 90))
-   { 
-   
+   {
+
 
 digitalWrite(tempH, LOW);
 digitalWrite(tempL, HIGH);
@@ -131,16 +133,9 @@ for(pos = 90; pos >= 0; pos -= 1){
   delay(15);
 }
 
-  
-   
+
+
    }
-   
+
 
 }
-
-
-
-
-
-
-

@@ -36,7 +36,7 @@ Open your favorite Terminal and run these commands.
 
 Type:
 ```{r, engine='sh', count_lines}
-$ git clone https://github.com/roberto8/gardenup
+$ git clone https://github.com/robertofiguz/gardenup
 ```
 
 Press Enter. Your local clone will be created.

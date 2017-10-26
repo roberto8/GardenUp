@@ -41,7 +41,7 @@ $ git clone https://github.com/roberto8/gardenup
 
 Press Enter. Your local clone will be created.
 ```{r, engine='sh', count_lines}
-$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+$ git clone https://github.com/roberto8/gardenup
 Cloning into `Spoon-Knife`...
 remote: Counting objects: 10, done.
 remote: Compressing objects: 100% (8/8), done.

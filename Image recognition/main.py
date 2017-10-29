@@ -1,4 +1,6 @@
 
+#base haarcascade for greenhouse use, change XML to plant in use
+
 import sys
 import cv2
 

@@ -6,6 +6,7 @@ Garden up! is a Maker based open-source project that means to make bioagricultur
   - Temperature
   - water retainance
 
+
 # New Features!
 
   - Renewed and more efficient watering system

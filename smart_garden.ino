@@ -116,12 +116,6 @@ for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
   }
 
   }
-
-
-
-
-
-
    else if ((DHT.temperature)<=ptemp && (pos == 90))
    {
 

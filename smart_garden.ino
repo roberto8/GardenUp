@@ -39,6 +39,7 @@ int val = 0;       // variable to store the value coming from the potentiometer
 void setup() {
 
 servotop.attach(9); //SERVO ataches to port 9
+servobottom.attach(8)//SERVO attaches to port 8 (bottom servo)
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
@@ -111,7 +112,7 @@ for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     servotop.write(pos);              // tell servo to go to position in variable 'pos'
     //Serial.print(pos);
-    delay(15);                       // waits 15ms for the servo to reach the position
+    delay(15);                      // waits 15ms for the servo to reach the position
   }
 
   }

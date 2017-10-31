@@ -12,6 +12,7 @@ int ptemp;//temperature needed
 //servo
 boolean servo = false;
 Servo servotop;
+Servo servobottom;
 int pos = 0;//servo starts in position 0 (closed)
 //servo
 
@@ -39,7 +40,7 @@ int val = 0;       // variable to store the value coming from the potentiometer
 void setup() {
 
 servotop.attach(9); //SERVO ataches to port 9
-servobottom.attach(8)//SERVO attaches to port 8 (bottom servo)
+servobottom.attach(8);//SERVO attaches to port 8 (bottom servo)
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
@@ -87,7 +88,7 @@ val = analogRead(potPin);    // read the value from the potentiometer
 val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
  //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
   Serial.print("Temperature needed= ");
-  //Serial.println(ptemp);
+  Serial.println(ptemp);
 
 
   int chk = DHT.read11(DHT11_PIN);

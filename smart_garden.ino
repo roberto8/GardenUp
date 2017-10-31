@@ -11,7 +11,7 @@ int ptemp;//temperature needed
 
 //servo
 boolean servo = false;
-Servo myservo;
+Servo servotop;
 int pos = 0;//servo starts in position 0 (closed)
 //servo
 
@@ -32,13 +32,13 @@ int SoilMoistureL = 13; //SoilMoisture's Low
 //led
 
 //potentiometer
-int potPin = 2;    // select the input pin for the potentiometer
+int potPin = 2;    // select the input pin for the potentiometer //not in use
 int val = 0;       // variable to store the value coming from the potentiometer
 //potentiometer
 
 void setup() {
 
-myservo.attach(9); //SERVO ataches to port 9
+servotop.attach(9); //SERVO ataches to port 9
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
@@ -109,7 +109,7 @@ digitalWrite(tempH, HIGH);
 digitalWrite(tempL, LOW);
 for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    servotop.write(pos);              // tell servo to go to position in variable 'pos'
     //Serial.print(pos);
     delay(15);                       // waits 15ms for the servo to reach the position
   }
@@ -128,7 +128,7 @@ digitalWrite(tempH, LOW);
 digitalWrite(tempL, HIGH);
 
 for(pos = 90; pos >= 0; pos -= 1){
-  myservo.write(pos);
+  servotop.write(pos);
   Serial.print(pos);
   delay(15);
 }

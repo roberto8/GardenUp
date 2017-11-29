@@ -47,7 +47,7 @@ pinMode(waterPin, OUTPUT);
 pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
 pinMode(SoilMoistureL, OUTPUT);
-ptemp=50;
+ptemp=val;
 }
 
 void loop() {
@@ -150,6 +150,20 @@ for(pos = 90; pos >= 0; pos -= 1){
 */
 servotop.write(0);
 
+/* convert presses to binary and store it as a string */
+String binNumber = String(ptemp, BIN); // change the vriable potentiometer to the potentiometer pin
+/* get the length of the string */
+int binLength = binNumber.length();
+if(ptemp <= 255) {	// if we have less or equal to 255 presses
+              // here is the scary code
+  for(int i = 0, x = 1; i < binLength; i++, x+=2) {
+    if(binNumber[i] == '0') state = LOW;
+    if(binNumber[i] == '1') state = HIGH;
+    digitalWrite(pins[i] + binLength - x, state);
+  }
+} else {
+  // do something when we reach 255
+}
 
    }
 delay(1000);

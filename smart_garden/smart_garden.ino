@@ -17,7 +17,7 @@ int pos = 0;//servo starts in position 0 (closed)
 //servo
 
 //watering
-int solenoidPin = 4; //solenoid pin atached to port 4 (not using solenoid) no relay
+int waterPin = 4;
 //sensor humidade porta A0//
 int rainPin = A0; //soil moisture sensor 1
 //sensor humidade porta A0//
@@ -26,10 +26,9 @@ int thresholdValue = 50; //moisture needed (%)
 //watering
 
 //led
-int tempH = 10; //temperature's high
-int tempL = 11; //temperature's  low
-int SoilMoistureH = 12; //SoilMoisture's high
-int SoilMoistureL = 13; //SoilMoisture's Low
+int tempH = 12; //temperature's high
+int tempL = 13; //temperature's  low
+int SoilMoistureL = 10; //SoilMoisture's Low
 //led
 
 //potentiometer
@@ -44,12 +43,11 @@ servobottom.attach(8);//SERVO attaches to port 8 (bottom servo)
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
-pinMode(solenoidPin, OUTPUT);
+pinMode(waterPin, OUTPUT);
 pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
-pinMode(SoilMoistureH, OUTPUT);
 pinMode(SoilMoistureL, OUTPUT);
-ptemp=20;
+ptemp=50;
 }
 
 void loop() {
@@ -57,7 +55,7 @@ void loop() {
 
 int sensorValue =  (analogRead(rainPin)); //using to moisture sensors to do the average
 
-sensorValue = map(sensorValue, 300,1023,100,0); //maping moisture value from 0-100 (percentage)
+sensorValue = map(sensorValue, 250,1023,100,0); //maping moisture value from 0-100 (percentage)
 Serial.print("Soil Humidity needed= ");
 Serial.println(thresholdValue);
 Serial.print("Soil Humidity= ");
@@ -67,9 +65,8 @@ if(sensorValue < thresholdValue){
 
 
   digitalWrite(SoilMoistureL,HIGH);
-  digitalWrite(SoilMoistureH,LOW);
   Serial.println("Need irrigation");
-  digitalWrite(solenoidPin, LOW);
+  digitalWrite(waterPin, LOW);
 
 // if irrigation needed indicating LED will light up and print, solenoid open (LOW signal, normaly open)
 }
@@ -78,18 +75,39 @@ else if (sensorValue > thresholdValue || sensorValue == thresholdValue) {
 
 
   digitalWrite(SoilMoistureL,LOW);
-  digitalWrite(SoilMoistureH,HIGH);
   Serial.println("Doesn't need irrigation");
- digitalWrite(solenoidPin, HIGH);
+ digitalWrite(waterPin, HIGH);
 // if no irrigation needed indicating LED will light up and print, solenoid close (HIGH signal, normaly open)
 }
 
 val = analogRead(potPin);    // read the value from the potentiometer
-val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
+val = map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
  //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
   Serial.print("Temperature needed= ");
   Serial.println(ptemp);
+  /*
 
+
+
+
+
+uint8_t bitsCount = sizeof( val ) * 8;
+char str[ bitsCount + 1 ];
+
+uint8_t i = 0;
+while ( bitsCount-- )
+    str[ i++ ] = bitRead( val, bitsCount ) + '0';
+str[ i ] = '\0';
+
+Serial.println( str );
+
+
+
+
+
+*/
+
+//add binary led for temperature
 
   int chk = DHT.read11(DHT11_PIN);
 
@@ -97,41 +115,42 @@ val=map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
   Serial.println(DHT.temperature);
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
-  delay(1000);//check delay to make serial prints at lower rates
 
 
 
 
 
 
-   if (((DHT.temperature) > (ptemp)) && (pos!=90)){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
+
+   if (((DHT.temperature) > (ptemp)) ){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
 
 Serial.print("temperature higher than needed");
 digitalWrite(tempH, HIGH);
 digitalWrite(tempL, LOW);
-for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
+/*for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     servotop.write(pos);              // tell servo to go to position in variable 'pos'
     //Serial.print(pos);
     delay(15);                      // waits 15ms for the servo to reach the position
+  }*/
+servotop.write(90);
   }
-
-  }
-   else if ((DHT.temperature)<=ptemp && (pos == 90))
+   else if ((DHT.temperature)<=ptemp )
    {
 
 
 digitalWrite(tempH, LOW);
 digitalWrite(tempL, HIGH);
-
+/*
 for(pos = 90; pos >= 0; pos -= 1){
   servotop.write(pos);
   Serial.print(pos);
   delay(15);
 }
+*/
+servotop.write(0);
 
 
    }
-
-
+delay(1000);
 }

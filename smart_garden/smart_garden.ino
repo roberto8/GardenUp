@@ -4,7 +4,9 @@
 #include <dht.h>  //moisture and temperature sensor (dht.11)
 #define DHT11_PIN 7 //temperature and moisture sensor atached to port 7 (digital)
 dht DHT;
-
+//const byte numPins = 8; //binary led temperature indicator
+//int state;				// used for HIGH or LOW - binary
+//byte pins [] = {0, 1, 3, 5, 6, 7, 8, 11, 12}; //check availability
 //temperature//
 int ptemp;//temperature needed
 //temperature
@@ -32,14 +34,14 @@ int SoilMoistureL = 10; //SoilMoisture's Low
 //led
 
 //potentiometer
-int potPin = 2;    // select the input pin for the potentiometer //not in use
+int potPin = 3;    // select the input pin for the potentiometer //not in use
 int val = 0;       // variable to store the value coming from the potentiometer
 //potentiometer
 
 void setup() {
 
 servotop.attach(9); //SERVO ataches to port 9
-servobottom.attach(8);//SERVO attaches to port 8 (bottom servo)
+//servobottom.attach(8);//SERVO attaches to port 8 (bottom servo)
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
@@ -47,14 +49,24 @@ pinMode(waterPin, OUTPUT);
 pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
 pinMode(SoilMoistureL, OUTPUT);
-ptemp=val;
+
+
+//for(int i = 0; i < numPins; i++) {
+ // pinMode(pins[i], OUTPUT);
+//}
+
+//check this code function
+	//attachInterrupt(0, count, LOW); //count is not declared
+//check this code function
+
+
 }
 
 void loop() {
 
 
 int sensorValue =  (analogRead(rainPin)); //using to moisture sensors to do the average
-
+Serial.println(analogRead(rainPin));
 sensorValue = map(sensorValue, 250,1023,100,0); //maping moisture value from 0-100 (percentage)
 Serial.print("Soil Humidity needed= ");
 Serial.println(thresholdValue);
@@ -80,11 +92,14 @@ else if (sensorValue > thresholdValue || sensorValue == thresholdValue) {
 // if no irrigation needed indicating LED will light up and print, solenoid close (HIGH signal, normaly open)
 }
 
-val = analogRead(potPin);    // read the value from the potentiometer
-val = map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
+//val = analogRead(potPin);    // read the value from the potentiometer
+//val = map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
  //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
+  Serial.println(analogRead(potPin));
   Serial.print("Temperature needed= ");
+  ptemp=25;
   Serial.println(ptemp);
+  
   /*
 
 
@@ -124,7 +139,7 @@ Serial.println( str );
 
    if (((DHT.temperature) > (ptemp)) ){  //if temperature is HIGHER then needed (defined by var "val") and door is closed
 
-Serial.print("temperature higher than needed");
+Serial.println("temperature higher than needed");
 digitalWrite(tempH, HIGH);
 digitalWrite(tempL, LOW);
 /*for (pos = 0; pos <= 90; pos =+1) { // goes from 0 degrees to 180 degrees
@@ -150,9 +165,9 @@ for(pos = 90; pos >= 0; pos -= 1){
 */
 servotop.write(0);
 
-/* convert presses to binary and store it as a string */
+/*
 String binNumber = String(ptemp, BIN); // change the vriable potentiometer to the potentiometer pin
-/* get the length of the string */
+
 int binLength = binNumber.length();
 if(ptemp <= 255) {	// if we have less or equal to 255 presses
               // here is the scary code
@@ -164,7 +179,7 @@ if(ptemp <= 255) {	// if we have less or equal to 255 presses
 } else {
   // do something when we reach 255
 }
-
+*/
    }
 delay(1000);
 }

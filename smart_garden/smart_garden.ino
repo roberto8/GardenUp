@@ -22,6 +22,7 @@ int pos = 0;//servo starts in position 0 (closed)
 int waterPin = 4;
 //sensor humidade porta A0//
 int rainPin = A0; //soil moisture sensor 1
+int rainPin1 = A1; //soil moisture sensor 1
 //sensor humidade porta A0//
 //int rainPin2 = A1; //soil moisture sensor 2 not in use
 int thresholdValue = 50; //moisture needed (%)
@@ -45,6 +46,7 @@ servotop.attach(9); //SERVO ataches to port 9
 
 Serial.begin(9600);
 pinMode(rainPin, INPUT);
+pinMode(rainPin1, INPUT);
 pinMode(waterPin, OUTPUT);
 pinMode(tempH, OUTPUT);
 pinMode(tempL, OUTPUT);
@@ -64,14 +66,28 @@ pinMode(SoilMoistureL, OUTPUT);
 
 void loop() {
 
+Serial.println("NEW READ");
 
+Serial.println();
 int sensorValue =  (analogRead(rainPin)); //using to moisture sensors to do the average
-Serial.println(analogRead(rainPin));
+//Serial.println(analogRead(rainPin));
 sensorValue = map(sensorValue, 250,1023,100,0); //maping moisture value from 0-100 (percentage)
-Serial.print("Soil Humidity needed= ");
-Serial.println(thresholdValue);
-Serial.print("Soil Humidity= ");
-Serial.println(sensorValue);
+Serial.print("*Soil Humidity*");
+Serial.println();
+Serial.println();
+Serial.print("Soil Humidity needed = ");
+Serial.print(thresholdValue);
+Serial.println("%");
+Serial.print("Soil Humidity vase 1 = ");
+Serial.print(sensorValue );
+Serial.println("%");
+
+int sensorValue1 =  (analogRead(rainPin1)); //using to moisture sensors to do the average
+//Serial.println(analogRead(rainPin));
+sensorValue1 = map(sensorValue1, 250,1023,100,0); //maping moisture value from 0-100 (percentage)
+Serial.print("Soil Humidity vase 2 = ");
+Serial.print(sensorValue1);
+Serial.println("%");
 
 if(sensorValue < thresholdValue){
 
@@ -91,14 +107,20 @@ else if (sensorValue > thresholdValue || sensorValue == thresholdValue) {
  digitalWrite(waterPin, HIGH);
 // if no irrigation needed indicating LED will light up and print, solenoid close (HIGH signal, normaly open)
 }
-
+Serial.println();
 //val = analogRead(potPin);    // read the value from the potentiometer
 //val = map(val, 0,1023,50,0); //map potentiometer value from 0 to 50 (ºC)
  //temperature is set by the potentiometer in 0-50ºC scale ("val" var)
-  Serial.println(analogRead(potPin));
-  Serial.print("Temperature needed= ");
+ // Serial.println(analogRead(potPin));
+ Serial.print("*Soil Humidity*");
+ Serial.println();
+Serial.println();
+ Serial.println("*Temperature*");
+ Serial.println();
+  Serial.print("Temperature needed = ");
   ptemp=25;
   Serial.println(ptemp);
+
   
   /*
 
@@ -132,7 +154,8 @@ Serial.println( str );
   Serial.println(DHT.humidity);
 
 
-
+Serial.println();
+ Serial.println("*Temperature*");
 
 
 
@@ -165,6 +188,12 @@ for(pos = 90; pos >= 0; pos -= 1){
 */
 servotop.write(0);
 
+Serial.println();
+Serial.println();
+Serial.println();
+Serial.println();
+Serial.println();
+
 /*
 String binNumber = String(ptemp, BIN); // change the vriable potentiometer to the potentiometer pin
 
@@ -181,5 +210,5 @@ if(ptemp <= 255) {	// if we have less or equal to 255 presses
 }
 */
    }
-delay(1000);
+delay(10000);
 }

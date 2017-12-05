@@ -1,12 +1,15 @@
+//declared ports: 7,4,A0,A1,12,13,10,3,9 
+
 #include <time.h> //make parameter to controll water irrigation making it irrigate for less then (x) value
 #include <Servo.h>
 #define delayTime 20 //var not in use
 #include <dht.h>  //moisture and temperature sensor (dht.11)
 #define DHT11_PIN 7 //temperature and moisture sensor atached to port 7 (digital)
 dht DHT;
-//const byte numPins = 8; //binary led temperature indicator
-//int state;				// used for HIGH or LOW - binary
-//byte pins [] = {0, 1, 3, 5, 6, 7, 8, 11, 12}; //check availability
+const byte numPins = 8; //binary led temperature indicator
+int state;				// used for HIGH or LOW - binary
+byte pins [] = {0, 1, 3, 5, 6, 7, 8, 11, 12}; //check availability
+
 //temperature//
 int ptemp;//temperature needed
 //temperature
@@ -53,9 +56,9 @@ pinMode(tempL, OUTPUT);
 pinMode(SoilMoistureL, OUTPUT);
 
 
-//for(int i = 0; i < numPins; i++) {
- // pinMode(pins[i], OUTPUT);
-//}
+for(int i = 0; i < numPins; i++) {
+  pinMode(pins[i], OUTPUT);
+}
 
 //check this code function
 	//attachInterrupt(0, count, LOW); //count is not declared
@@ -121,8 +124,6 @@ Serial.println();
   ptemp=25;
   Serial.println(ptemp);
 
-  
-  /*
 
 
 
@@ -142,7 +143,6 @@ Serial.println( str );
 
 
 
-*/
 
 //add binary led for temperature
 
@@ -194,7 +194,7 @@ Serial.println();
 Serial.println();
 Serial.println();
 
-/*
+
 String binNumber = String(ptemp, BIN); // change the vriable potentiometer to the potentiometer pin
 
 int binLength = binNumber.length();
@@ -208,7 +208,7 @@ if(ptemp <= 255) {	// if we have less or equal to 255 presses
 } else {
   // do something when we reach 255
 }
-*/
-   }
+
+ }
 delay(10000);
 }

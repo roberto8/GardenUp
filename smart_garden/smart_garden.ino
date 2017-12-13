@@ -1,4 +1,4 @@
-//declared ports: 7,4,A0,A1,12,13,10,3,9 
+//declared ports: 7,4,A0,A1,12,13,10,3,9
 
 #include <time.h> //make parameter to controll water irrigation making it irrigate for less then (x) value
 #include <Servo.h>
@@ -8,7 +8,7 @@
 dht DHT;
 const byte numPins = 8; //binary led temperature indicator
 int state;				// used for HIGH or LOW - binary
-byte pins [] = {0, 1, 3, 5, 6, 7, 8, 11, 12}; //check availability
+byte pins [] = {0, 1, 2, 4, 5, 6, 8, 11, 14}; //check availability
 
 //temperature//
 int ptemp;//temperature needed
